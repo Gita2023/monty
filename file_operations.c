@@ -1,12 +1,12 @@
 #include "monty.h"
 
 /**
- * openMontyFile - Opens a Monty file.
+ * openFile - Opens a Monty file.
  * @fileName: The file path.
  * Return: void
  */
-
-void openMontyFile(char *file_name)
+ 
+void openFile(char *file_name)
 {
 	FILE *fd = fopen(file_name, "r");
 
@@ -19,12 +19,12 @@ void openMontyFile(char *file_name)
 
 
 /**
- * readMontyFile - Reads a Monty file.
- * @fd: Pointer to file descriptor.
+ * readfile - reads a file
+ * @fd: pointer to file descriptor
  * Return: void
  */
 
-void readMontyFile(FILE *fd)
+void readfile(FILE *fd)
 {
 	int line_number, format = 0;
 	char *buffer = NULL;
@@ -39,7 +39,7 @@ void readMontyFile(FILE *fd)
 
 
 /**
- * parseMontyLine - Separates each line into tokens to determine
+ * sepre_line - Separates each line into tokens to determine
  * which function to call
  * @buffer: line from the file
  * @line_number: line number
@@ -48,7 +48,7 @@ void readMontyFile(FILE *fd)
  * Return: Returns 0 if the opcode is stack. 1 if queue.
  */
 
-int parseMontyLine(char *buffer, int line_number, int format)
+int sepre_line(char *buffer, int line_number, int format)
 {
 	char *opcode, *value;
 	const char *delim = "\n ";
@@ -71,7 +71,7 @@ int parseMontyLine(char *buffer, int line_number, int format)
 }
 
 /**
- * findMontyFunction - find the appropriate function for the opcode
+ * findfunc - find the appropriate function for the opcode
  * @opcode: opcode
  * @value: argument of opcode
  * @format:  storage format. If 0 Nodes will be entered as a stack.
@@ -79,7 +79,7 @@ int parseMontyLine(char *buffer, int line_number, int format)
  * if 1 nodes will be entered as a queue.
  * Return: void
  */
-void findMontyFunction(char *opcode, char *value, int ln, int format)
+void findfunc(char *opcode, char *value, int ln, int format)
 {
 	int i;
 	int flag;
@@ -120,7 +120,7 @@ void findMontyFunction(char *opcode, char *value, int ln, int format)
 
 
 /**
- * callMontyFunction - Calls the required function.
+ * callfun - Calls the required function.
  * @func: Pointer to the function that is about to be called.
  * @op: string representing the opcode.
  * @val: string representing a numeric value.
@@ -128,7 +128,7 @@ void findMontyFunction(char *opcode, char *value, int ln, int format)
  * @format: Format specifier. If 0 Nodes will be entered as a stack.
  * if 1 nodes will be entered as a queue.
  */
-void callMontyFunction(op_func func, char *op, char *val, int ln, int format)
+void callfun(op_func func, char *op, char *val, int ln, int format)
 {
 	stack_t *node;
 	int flag;
