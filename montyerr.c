@@ -47,7 +47,7 @@ void errors(int error_code, ...)
 }
 
 /**
- * more_errors - handles the errors.
+ * more_errors - handles errors.
  * @errors_code: The errors codes are the following:
  * (6) => When the stack it empty for pint.
  * (7) => When the stack it empty for pop.
@@ -89,7 +89,7 @@ void more_errors(int error_code, ...)
 
 /**
  * string_errors - handles errors.
- * @errors_code: The errors codes are the following:
+ * @error_code: The error codes are the following:
  * (10) ~> The number inside a node is outside ASCII bounds.
  * (11) ~> The stack is empty.
  */

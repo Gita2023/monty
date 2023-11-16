@@ -21,11 +21,11 @@ int main(int argc, char *argv[])
 }
 
 /**
- * create_node - Creates a node.
+ * createnode - Creates a node.
  * @n: Number to go inside the node.
  * Return: Upon sucess a pointer to the node. Otherwise NULL.
  */
-stack_t *create_node(int n)
+stack_t *createnode(int n)
 {
 	stack_t *node;
 
@@ -39,9 +39,9 @@ stack_t *create_node(int n)
 }
 
 /**
- * free_nodes - Frees nodes in the stack.
+ * freenodes - Frees nodes in the stack.
  */
-void free_nodes(void)
+void freenodes(void)
 {
 	stack_t *tmp;
 
@@ -58,11 +58,11 @@ void free_nodes(void)
 
 
 /**
- * add_to_queue - Adds a node to the queue.
+ * addtoqueue - Adds a node to the queue.
  * @new_node: Pointer to the new node.
  * @ln: line number of the opcode.
  */
-void add_to_queue(stack_t **new_node, __attribute__((unused))unsigned int ln)
+void addtoqueue(stack_t **new_node, __attribute__((unused))unsigned int ln)
 {
 	stack_t *tmp;
 
