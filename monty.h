@@ -10,37 +10,37 @@
 #include <stdarg.h>
 
 /**
- * struct stack_x - doubly linked list representation of a stack (or queue)
+ * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
- * @prev: Ahead to the previous element of the stack (or queue)
- * @next: Ahead to the next element of the stack (or queue)
+ * @prev: points to the previous element of the stack (or queue)
+ * @next: points to the next element of the stack (or queue)
  *
  * Description: doubly linked list node structure
  * for stack, queues, LIFO, FIFO
  */
-typedef struct stack_x
+typedef struct stack_s
 {
         int n;
-        struct stack_x *prev;
-        struct stack_x *next;
+        struct stack_s *prev;
+        struct stack_s *next;
 } stack_t;
 
 /**
- * struct instruction_x - operation code and its function
+ * struct instruction_s - opcode and its function
  * @opcode: the opcode
  * @f: function to handle the opcode
  *
  * Description: opcode and its function
  * for stack, queues, LIFO, FIFO
  */
-typedef struct instruction_x
+typedef struct instruction_s
 {
         char *opcode;
         void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
 extern stack_t *head;
-typedef void (*op_function)(stack_t **, unsigned int);
+typedef void (*op_func)(stack_t **, unsigned int);
 
 /*file operations*/
 void open_file(char *file_name);
@@ -56,7 +56,7 @@ void print_stack(stack_t **, unsigned int);
 void add_to_stack(stack_t **, unsigned int);
 void add_to_queue(stack_t **, unsigned int);
 
-void call_fun(op_function, char *, char *, int, int);
+void call_fun(op_func, char *, char *, int, int);
 
 void print_top(stack_t **, unsigned int);
 void pop_top(stack_t **, unsigned int);
