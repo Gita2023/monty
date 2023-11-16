@@ -1,29 +1,29 @@
 #include "monty.h"
-stack_t *globalHead = NULL;
+stack_t *head = NULL;
 
 /**
  * main - entry point
- * @argumentCount: arguments count
- * @argumentValues: list of arguments
+ * @argc: arguments count
+ * @argv: list of arguments
  * Return: always 0
  */
 
-int main(int argumentCount, char *argumentValues[])
+int main(int argc, char *argv[])
 {
-	if (argumentCount != 2)
+	if (argc != 2)
 	{
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-	open_file(argumentValues[1]);
-	freeStackNodes();
+	open_file(argv[1]);
+	free_nodes();
 	return (0);
 }
 
 /**
- * createStackNode - Creates a stack node.
- * @value: Number to be stored in the node
- * Return: A pointer to the newly created stack node
+ * createStackNode - Creates a node.
+ * @value: Number to go inside the node.
+ * Return: Upon sucess a pointer to the node. Otherwise NULL.
  */
 stack_t *createStackNode(int value)
 {
@@ -31,7 +31,7 @@ stack_t *createStackNode(int value)
 
 	node = malloc(sizeof(stack_t));
 	if (node == NULL)
-		handleError(4);
+		err(4);
 	node->next = NULL;
 	node->prev = NULL;
 	node->value = value;
@@ -39,45 +39,45 @@ stack_t *createStackNode(int value)
 }
 
 /**
- * freeStackNodes - Frees all nodes in the stack.
+ * freeStackNodes - Frees nodes in the stack.
  */
 void freeStackNodes(void)
 {
-	stack_t *tempNode;
+	stack_t *tmp;
 
 	if (head == NULL)
 		return;
 
 	while (head != NULL)
 	{
-		tempNode = head;
+		tmp = head;
 		head = head->next;
-		free(tempNode);
+		free(tmp);
 	}
 }
 
 
 /**
  * enqueue - Adds a node to the queue.
- * @newNode: Pointer to the new node to be added
- * @lineNumber: Line number of the opcode
+ * @new_node: Pointer to the new node.
+ * @ln: line number of the opcode.
  */
-void enqueue(stack_t **newNode, __attribute__((unused))unsigned int lineNumber)
+void enqueue(stack_t **new_node, __attribute__((unused))unsigned int ln)
 {
-	stack_t *tempNode;
+	stack_t *tmp;
 
-	if (newNode == NULL || *newNode == NULL)
+	if (new_node == NULL || *new_node == NULL)
 		exit(EXIT_FAILURE);
 	if (head == NULL)
 	{
-		head = *newNode;
+		head = *new_node;
 		return;
 	}
-	tempNode = head;
-	while (tempNode->next != NULL)
-		tempNode = tempNode->next;
+	tmp = head;
+	while (tmp->next != NULL)
+		tmp = tmp->next;
 
-	tempNode->next = *newNode;
-	(*newNode)->prev = tempNode;
+	tmp->next = *new_node;
+	(*new_node)->prev = tmp;
 
 }
