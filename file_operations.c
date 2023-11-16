@@ -8,13 +8,13 @@
 
 void openMontyFile(char *file_name)
 {
-	FILE *Fdescriptor = fopen(file_name, "r");
+	FILE *fd = fopen(file_name, "r");
 
-	if (file_name == NULL || Fdescriptor == NULL)
-		handleError(2, file_name);
+	if (file_name == NULL || fd == NULL)
+		err(2, file_name);
 
-	readMontyFile(Fdescriptor);
-	fclose(Fdescriptor);
+	read_file(fd);
+	fclose(fd);
 }
 
 
@@ -24,62 +24,62 @@ void openMontyFile(char *file_name)
  * Return: void
  */
 
-void readMontyFile(FILE *Fdescriptor)
+void readMontyFile(FILE *fd)
 {
-	int line_number, Sformat = 0;
-	char *inputBuffer = NULL;
+	int line_number, format = 0;
+	char *buffer = NULL;
 	size_t len = 0;
 
-	for (line_number = 1; getline(&inputBuffer, &len, Fdescriptor) != -1; line_number++)
+	for (line_number = 1; getline(&buffer, &len, fd) != -1; line_number++)
 	{
-		Sformat = parseMontyLine(inputBuffer, line_number, Sformat);
+		format = parse_line(buffer, line_number, format);
 	}
-	free(inputBuffer);
+	free(buffer);
 }
 
 
 /**
- * parseMontyLine - Separates each line into tokens to determine it to,
-   which function to call
- * @inputBuffer: line from the file
+ * parseMontyLine - Separates each line into tokens to determine
+ * which function to call
+ * @buffer: line from the file
  * @line_number: line number
- * @Sformat:  storage Sformat. If 0 Nodes will be entered as a stack.
+ * @format:  storage format. If 0 Nodes will be entered as a stack.
  * if 1 nodes will be entered as a queue.
- * Return: Returns 0 if the operation is stack. 1 if queue.
+ * Return: Returns 0 if the opcode is stack. 1 if queue.
  */
 
-int parseMontyLine(char *inputBuffer, int line_number, int Sformat)
+int parseMontyLine(char *buffer, int line_number, int format)
 {
-	char *operation, *argument;
-	const char *delimiter = "\n ";
+	char *opcode, *value;
+	const char *delim = "\n ";
 
-	if (inputBuffer == NULL)
-		handleError(4);
+	if (buffer == NULL)
+		err(4);
 
-	operation = strtok(inputBuffer, delimiter);
-	if (operation == NULL)
-		return (Sformat);
-	argument = strtok(NULL, delimiter);
+	opcode = strtok(buffer, delim);
+	if (opcode == NULL)
+		return (format);
+	value = strtok(NULL, delim);
 
-	if (strcmp(operation, "stack") == 0)
+	if (strcmp(opcode, "stack") == 0)
 		return (0);
-	if (strcmp(operation, "queue") == 0)
+	if (strcmp(opcode, "queue") == 0)
 		return (1);
 
-	findMontyFunction(operation, argument, line_number, Sformat);
-	return (Sformat);
+	find_func(opcode, value, line_number, format);
+	return (format);
 }
 
 /**
- * findMontyFunction - Find the appropriate function for the opcode.
- * @opcode: Opcode.
- * @value: Argument of opcode.
- * @lineNumber: Line number.
- * @format: Storage format. If 0, Nodes will be entered as a stack.
- *          If 1, nodes will be entered as a queue.
+ * findMontyFunction - find the appropriate function for the opcode
+ * @opcode: opcode
+ * @value: argument of opcode
+ * @format:  storage format. If 0 Nodes will be entered as a stack.
+ * @ln: line number
+ * if 1 nodes will be entered as a queue.
  * Return: void
  */
-void findMontyFunction(char *operation, char *argument, int lineNumber, int Sformat)
+void findMontyFunction(char *opcode, char *value, int ln, int format)
 {
 	int i;
 	int flag;
@@ -103,58 +103,58 @@ void findMontyFunction(char *operation, char *argument, int lineNumber, int Sfor
 		{NULL, NULL}
 	};
 
-	if (operation[0] == '#')
+	if (opcode[0] == '#')
 		return;
 
-	for (flag = 1, i = 0; func_list[i].operation != NULL; i++)
+	for (flag = 1, i = 0; func_list[i].opcode != NULL; i++)
 	{
-		if (strcmp(operation, func_list[i].operation) == 0)
+		if (strcmp(opcode, func_list[i].opcode) == 0)
 		{
-			call_fun(func_list[i].f, operation, argument, lineNumber, Sformat);
+			call_fun(func_list[i].f, opcode, value, ln, format);
 			flag = 0;
 		}
 	}
 	if (flag == 1)
-		handleError(3, lineNumber, operation);
+		err(3, ln, opcode);
 }
 
 
 /**
  * callMontyFunction - Calls the required function.
- * @operationFunc: Ahead to the function that is about to be called.
- * @operation: String representing the operation code.
- * @value: String representing a numeric value.
- * @lineNumber: Line number for the instruction.
- * @format: Format specifier. If 0, Nodes will be entered as a stack.
- *          If 1, nodes will be entered as a queue.
+ * @func: Pointer to the function that is about to be called.
+ * @op: string representing the opcode.
+ * @val: string representing a numeric value.
+ * @ln: line numeber for the instruction.
+ * @format: Format specifier. If 0 Nodes will be entered as a stack.
+ * if 1 nodes will be entered as a queue.
  */
-void callMontyFunction(op_func operationFunc, char *operation, char *value, int lineNumber, int Sformat)
+void callMontyFunction(op_func func, char *op, char *val, int ln, int format)
 {
 	stack_t *node;
 	int flag;
 	int i;
 
 	flag = 1;
-	if (strcmp(operation, "push") == 0)
+	if (strcmp(op, "push") == 0)
 	{
-		if (value != NULL && value[0] == '-')
+		if (val != NULL && val[0] == '-')
 		{
-			value = value + 1;
+			val = val + 1;
 			flag = -1;
 		}
-		if (value == NULL)
-			handleError(5, lineNumber);
-		for (i = 0; value[i] != '\0'; i++)
+		if (val == NULL)
+			err(5, ln);
+		for (i = 0; val[i] != '\0'; i++)
 		{
-			if (isdigit(value[i]) == 0)
-				handleError(5, lineNumber);
+			if (isdigit(val[i]) == 0)
+				err(5, ln);
 		}
-		node = create_node(atoi(value) * flag);
-		if (Sformat == 0)
-			operationFunc(&node, lineNumber);
-		if (Sformat == 1)
-			add_to_queue(&node, lineNumber);
+		node = create_node(atoi(val) * flag);
+		if (format == 0)
+			func(&node, ln);
+		if (format == 1)
+			add_to_queue(&node, ln);
 	}
 	else
-		operationFunc(&head, lineNumber);
+		func(&head, ln);
 }
