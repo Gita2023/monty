@@ -1,19 +1,19 @@
 #include "monty.h"
 
 /**
- * openFile - Opens a Monty file.
- * @fileName: The file path.
+ * openfile - opens a file
+ * @file_name: the file namepath
  * Return: void
  */
- 
-void openFile(char *file_name)
+
+void openfile(char *file_name)
 {
 	FILE *fd = fopen(file_name, "r");
 
 	if (file_name == NULL || fd == NULL)
 		err(2, file_name);
 
-	read_file(fd);
+	readfile(fd);
 	fclose(fd);
 }
 
@@ -32,14 +32,14 @@ void readfile(FILE *fd)
 
 	for (line_number = 1; getline(&buffer, &len, fd) != -1; line_number++)
 	{
-		format = parse_line(buffer, line_number, format);
+		format = parseline(buffer, line_number, format);
 	}
 	free(buffer);
 }
 
 
 /**
- * sepre_line - Separates each line into tokens to determine
+ * parseline - Separates each line into tokens to determine
  * which function to call
  * @buffer: line from the file
  * @line_number: line number
@@ -48,7 +48,7 @@ void readfile(FILE *fd)
  * Return: Returns 0 if the opcode is stack. 1 if queue.
  */
 
-int sepre_line(char *buffer, int line_number, int format)
+int parseline(char *buffer, int line_number, int format)
 {
 	char *opcode, *value;
 	const char *delim = "\n ";
@@ -66,7 +66,7 @@ int sepre_line(char *buffer, int line_number, int format)
 	if (strcmp(opcode, "queue") == 0)
 		return (1);
 
-	find_func(opcode, value, line_number, format);
+	findfunc(opcode, value, line_number, format);
 	return (format);
 }
 
@@ -110,7 +110,7 @@ void findfunc(char *opcode, char *value, int ln, int format)
 	{
 		if (strcmp(opcode, func_list[i].opcode) == 0)
 		{
-			call_fun(func_list[i].f, opcode, value, ln, format);
+			callfun(func_list[i].f, opcode, value, ln, format);
 			flag = 0;
 		}
 	}
